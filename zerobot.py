@@ -68,4 +68,8 @@ t1.start() # start bump watch thread
 for i in range(4): # Draw a right-handed square
     move_bump('F',3,4104)
     move_bump('R',3,2052)
+    if all_clear==False:
+        while all_clear==False:
+            move_bump('B',3,200)
+        move_bump('L',3,1026)
 running = False
