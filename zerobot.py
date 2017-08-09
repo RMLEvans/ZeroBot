@@ -33,9 +33,9 @@ def bump_watch(): # thread to watch fro obstacles
         else:
             all_clear = True
 
-def move_bump(direction='F', seqsize=1, numsteps=2052):
+def move_bump(direction='F', motorSpeed=1, numsteps=2052):
     counter = 0 # 2052 steps = 1 revolution for stepsize of 2
-    StepDir = seqsize # Set to 1 or 2 for fwd, -1 or -2 for back
+    StepDir = motorSpeed # Set to 1 or 2 for fwd, -1 or -2 for back
     if direction == 'B':
         StepDir = StepDir * -1
     WaitTime = 10/float(1000) # adjust this to change speed
@@ -58,7 +58,7 @@ def move_bump(direction='F', seqsize=1, numsteps=2052):
       if (StepCounter<0):
         StepCounter = StepCount+StepDir
       time.sleep(WaitTime)  #pause
-      counter+=seqsize
+      counter+=motorSpeed
 
 t1 = Thread(target=bump_watch) # run as seperate thread
 t1.start() # start bump watch thread
