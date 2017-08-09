@@ -12,13 +12,13 @@ IN3_m2 = g0.OutputDevice(13)
 IN2_m2 = g0.OutputDevice(5)
 IN1_m2 = g0.OutputDevice(6)
 StepPins_m2 = [IN1_m2,IN2_m2,IN3_m2,IN4_m2] # Motor 2 GPIO pins
-Seq = [[1,0,0,1], # Define step sequence
-       [1,0,0,0], # as shown in manufacturers datasheet
-       [1,1,0,0],
-       [0,1,0,0],
-       [0,1,1,0],
-       [0,0,1,0],
-       [0,0,1,1],
+Seq = [[0,0,1,1],  # Define step sequence.
+       [0,0,1,0],  # Stepper motor contains four magnetic coils, 90 degrees apart.
+       [0,1,1,0],  # Either a single coil or two adjacent coils can be activated,
+       [0,1,0,0],  # so 8 positions are possible, 45 degrees apart.
+       [1,1,0,0],  # Activating them in sequence causes rotation.
+       [1,0,0,0],  # Note there is gearing inside each motor unit (ratio 512:1 ?).
+       [1,0,0,1],
        [0,0,0,1]]
 StepCount = len(Seq)
 all_clear = True
@@ -58,11 +58,11 @@ def move_bump(direction='F', seqsize=1, numsteps=2052):
       if (StepCounter<0):
         StepCounter = StepCount+StepDir
       time.sleep(WaitTime)  #pause
-      counter+=1
+      counter+=seqsize
 
 t1 = Thread(target=bump_watch) # run as seperate thread
 t1.start() # start bump watch thread
 for i in range(4): # Draw a right-handes square
-    move_bump('F',-2,4104)
-    move_bump('R',-2,2052)
+    move_bump('F',3,4104)
+    move_bump('R',3,2052)
 running = False
