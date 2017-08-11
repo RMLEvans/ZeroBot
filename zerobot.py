@@ -1,3 +1,7 @@
+# zerobot.py
+# On-board code for robot based on the Raspberry Pi Zero
+# See The MagPi Magazine Issue 40 - https://www.raspberrypi.org/magpi/issues/40/
+
 import time, sys
 import gpiozero as g0
 from threading import Thread
@@ -17,7 +21,7 @@ Seq = [[0,0,1,1],  # Define step sequence.
        [0,1,1,0],  # Either a single coil or two adjacent coils can be activated, 
        [0,1,0,0],  # so 8 positions are possible, 45 degrees apart.
        [1,1,0,0],  # Activating them in sequence causes rotation.
-       [1,0,0,0],  # Note there is gearing inside each motor unit (ratio 512:1 ?).
+       [1,0,0,0],  # Note there is gearing inside each motor unit. (Many revs per rotation of wheel.)
        [1,0,0,1],
        [0,0,0,1]]
 StepCount = len(Seq)
@@ -33,16 +37,16 @@ def bump_watch(): # thread to watch for obstacles
         else:
             all_clear = True
 
-def move_bump(direction='F', motorSpeed=1, numsteps=2052):
+def move_bump(direction='F', motorStepSize=1, numsteps=2052):  # Set motorStepSize to 1, 2 or 3. 3 is fastest (skipping 2 motor positions), but lowest power.
     WaitTime = 10/float(10000) # adjust this to change speed
 	if direction == 'L' or direction == 'F':
-		leftStepSize = motorSpeed # Set to 1, 2 or 3 for forwards rotation. 3 is fastest (skipping motor positions, but lowest power.
+		leftStepSize = motorStepSize
 	else:
-		leftStepSize = -motorSpeed
+		leftStepSize = -motorStepSize
 	if direction == 'R' or direction == 'F':
-		rightStepSize = motorSpeed
+		rightStepSize = motorStepSize
 	else:
-		rightStepSize = -motorSpeed
+		rightStepSize = -motorStepSize
     leftStepCounter = 0
     rightStepCounter = 0
     counter = 0 # 4104 steps = 1 revolution
@@ -61,8 +65,13 @@ def move_bump(direction='F', motorSpeed=1, numsteps=2052):
 			else:
 				Rpin.off()
 		time.sleep(WaitTime)  #pause
-		counter += motorSpeed
+		counter += motorStepSize
 
+
+# ================= Main Program ====================
+# Edit this to alter the zerobot's route
+# and try out different strategies to find/avoid obstacles.
+#
 t1 = Thread(target=bump_watch) # run as seperate thread
 t1.start() # start bump watch thread
 for i in range(4): # Draw a right-handed square
