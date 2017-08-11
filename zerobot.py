@@ -38,34 +38,34 @@ def bump_watch(): # thread to watch for obstacles
             all_clear = True
 
 def move_bump(direction='F', motorStepSize=1, numsteps=2052):  # Set motorStepSize to 1, 2 or 3. 3 is fastest (skipping 2 motor positions), but lowest power.
-    WaitTime = 10/float(10000) # adjust this to change speed
-	if direction == 'L' or direction == 'F':
-		leftStepSize = motorStepSize
-	else:
-		leftStepSize = -motorStepSize
-	if direction == 'R' or direction == 'F':
-		rightStepSize = motorStepSize
-	else:
-		rightStepSize = -motorStepSize
+    WaitTime = 25/float(10000) # adjust this to change speed
+    if direction == 'L' or direction == 'F':
+	    leftStepSize = motorStepSize
+    else:
+        leftStepSize = -motorStepSize
+    if direction == 'R' or direction == 'F':
+        rightStepSize = motorStepSize
+    else:
+        rightStepSize = -motorStepSize
     leftStepCounter = 0
     rightStepCounter = 0
     counter = 0 # 4104 steps = 1 revolution
     while all_clear and counter < numsteps: # only move if no obstacles
-		leftStepCounter = (leftStepCounter+leftStepSize+StepCount)%StepCount
-		rightStepCounter = (rightStepCounter+rightStepSize+StepCount)%StepCount
-		for pin in range(0, 4):
-			Lpin = StepPins_m1[pin]
-			Rpin = StepPins_m2[pin]
-			if Seq[leftStepCounter][pin]==1:
-				Lpin.on()
-			else:
-				Lpin.off()
-			if Seq[rightStepCounter][pin]==1:
-				Rpin.on() # Right wheel only
-			else:
-				Rpin.off()
-		time.sleep(WaitTime)  #pause
-		counter += motorStepSize
+        leftStepCounter = (leftStepCounter+leftStepSize+StepCount)%StepCount
+        rightStepCounter = (rightStepCounter+rightStepSize+StepCount)%StepCount
+        for pin in range(0, 4):
+            Lpin = StepPins_m1[pin]
+            Rpin = StepPins_m2[pin]
+            if Seq[leftStepCounter][pin]==1:
+                Lpin.on()
+            else:
+                Lpin.off()
+            if Seq[rightStepCounter][pin]==1:
+                Rpin.on() # Right wheel only
+            else:
+                Rpin.off()
+        time.sleep(WaitTime)  #pause
+        counter += motorStepSize
 
 
 # ================= Main Program ====================
