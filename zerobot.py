@@ -40,7 +40,7 @@ def bump_watch(): # thread to watch for obstacles
 def move_bump(direction='F', motorStepSize=1, numsteps=2052):  # Set motorStepSize to 1, 2 or 3. 3 is fastest (skipping 2 motor positions), but lowest power.
     WaitTime = 25/float(10000) # adjust this to change speed
     if direction == 'L' or direction == 'F':
-	    leftStepSize = motorStepSize
+        leftStepSize = motorStepSize
     else:
         leftStepSize = -motorStepSize
     if direction == 'R' or direction == 'F':
